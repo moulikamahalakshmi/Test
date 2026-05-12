@@ -1,79 +1,339 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fancy Painting Gallery</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Georgia', serif;
-      background: linear-gradient(to right, #fdfcfb, #e2d1c3);
-      color: #333;
-    }
-    header {
-      text-align: center;
-      padding: 2rem;
-      background-color: #4a3f35;
-      color: #fff;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin: 0;
-    }
-    nav {
-      margin-top: 1rem;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 1rem;
-      font-weight: bold;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 2rem;
-    }
-    .gallery img {
-      width: 100%;
-      height: auto;
-      border: 5px solid #4a3f35;
-      border-radius: 10px;
-      transition: transform 0.3s ease;
-    }
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background-color: #4a3f35;
-      color: #fff;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Fancy 3D Art Gallery — Manifest Example</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0710;
+    --card-bg: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    --accent1:#ff6b6b;
+    --accent2:#7b61ff;
+    --accent3:#00e0a8;
+    --shadow: 0 10px 30px rgba(2,6,23,0.6);
+  }
+  html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(123,97,255,0.08), transparent),
+    radial-gradient(900px 500px at 90% 90%, rgba(0,224,168,0.06), transparent),
+    var(--bg);color:#e9eef8;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+  .wrap{max-width:1200px;margin:36px auto;padding:24px;position:relative;}
+  header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px;}
+  .brand{display:flex;gap:16px;align-items:center;}
+  .logo{width:56px;height:56px;border-radius:12px;background:conic-gradient(from 120deg,var(--accent1),var(--accent2),var(--accent3));box-shadow:0 6px 20px rgba(123,97,255,0.18), inset 0 -6px 18px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:18px;}
+  h1{font-size:20px;margin:0;}
+  p.lead{margin:0;color:#b9c2d9;font-size:13px;}
+  .controls{display:flex;gap:12px;align-items:center;}
+  .btn{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600;box-shadow:var(--shadow);transition:transform .18s ease;}
+  .btn:active{transform:translateY(2px);}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;perspective:1200px;transform-style:preserve-3d;}
+  .card{position:relative;height:380px;border-radius:18px;overflow:visible;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.2,.9,.25,1),box-shadow .45s;will-change:transform;}
+  .card-inner{position:absolute;inset:0;border-radius:18px;background:var(--card-bg);padding:18px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(255,255,255,0.03);}
+  .art-wrap{position:absolute;top:18px;left:18px;right:18px;bottom:86px;border-radius:12px;overflow:hidden;transform:translateZ(40px) scale(1);transition:transform .45s cubic-bezier(.2,.9,.25,1);box-shadow:0 18px 40px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(255,255,255,0.02));}
+  .art-wrap img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center;transition:transform .6s cubic-bezier(.2,.9,.25,1),opacity .3s ease;filter:saturate(1.05) contrast(1.02);background:#0b0710;}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px;}
+  .meta .title{font-weight:700;font-size:15px;letter-spacing:0.2px;}
+  .meta .subtitle{color:#9fb0d6;font-size:12px;}
+  .neon{position:absolute;inset:auto 12px 12px 12px;height:6px;border-radius:6px;background:linear-gradient(90deg, rgba(255,107,107,0.9), rgba(123,97,255,0.9), rgba(0,224,168,0.9));filter:blur(8px);opacity:0.9;transform:translateZ(20px);}
+  .card:hover{transform:translateY(-18px) rotateX(8deg) rotateY(6deg);box-shadow:0 40px 80px rgba(2,6,23,0.75);}
+  .card:hover .art-wrap{transform:translateZ(70px) scale(1.03);}
+  .card:hover .art-wrap img{transform:scale(1.06) rotate(-0.6deg);}
+  .orb{position:absolute;width:120px;height:120px;border-radius:50%;pointer-events:none;mix-blend-mode:screen;filter:blur(36px);opacity:0.18;transform:translateZ(-40px);}
+  .orb.one{right:-40px;top:-40px;background:linear-gradient(45deg, rgba(123,97,255,0.9), rgba(255,107,107,0.9));}
+  .orb.two{left:-60px;bottom:-60px;width:200px;height:200px;background:linear-gradient(45deg, rgba(0,224,168,0.95), rgba(123,97,255,0.6));}
+  .placeholder{display:flex;align-items:center;justify-content:center;color:#b9c2d9;font-size:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));width:100%;height:100%;}
+  .diag{position:fixed;right:18px;bottom:18px;background:rgba(2,6,23,0.85);color:#cfeef0;padding:10px 14px;border-radius:10px;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,0.6);z-index:9999;display:none;}
+  .diag.show{display:block;}
+  @media (max-width:720px){.art-wrap{bottom:96px}.card{height:320px}}
+  body.tilt-enabled .wrap{transition:transform .12s linear;transform-style:preserve-3d;}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Painting Gallery</h1>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Gallery</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-    </nav>
-  </header>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">AG</div>
+        <div>
+          <h1>Fancy Art Gallery</h1>
+          <p class="lead">Auto manifest • placeholder images • resilient loading</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="toggleTilt">Toggle Parallax</button>
+        <button class="btn" id="shuffle">Shuffle</button>
+        <button class="btn" id="runDiag">Run Image Check</button>
+      </div>
+    </header>
 
-  <section class="gallery">
-    <img src="painting1.jpg" alt="Elegant Painting 1">
-    <img src="painting2.jpg" alt="Elegant Painting 2">
-    <img src="painting3.jpg" alt="Elegant Painting 3">
-    <img src="painting4.jpg" alt="Elegant Painting 4">
-  </section>
+    <main>
+      <div id="status" style="margin-bottom:12px;color:#b9c2d9;font-size:13px">Rendering gallery from embedded manifest…</div>
 
-  <footer>
-    <p>&copy; 2026 Fancy Painting Gallery. All rights reserved.</p>
-  </footer>
+      <div class="gallery" id="gallery" aria-live="polite"></div>
+    </main>
+
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+  </div>
+
+  <div class="diag" id="diagBox">Image check: <span id="diagCount">0</span> broken</div>
+
+<script>
+/* Embedded manifest using public placeholder images.
+   You can replace the "src" values with your own image URLs or local paths.
+*/
+const manifest = [
+  {
+    "src": "https://picsum.photos/id/1015/1200/800",
+    "title": "Dawn Over Ridge",
+    "subtitle": "Photography • 2024"
+  },
+  {
+    "src": "https://picsum.photos/id/1025/1200/800",
+    "title": "Colorful Flight",
+    "subtitle": "Digital • 2023"
+  },
+  {
+    "src": "https://picsum.photos/id/1035/1200/800",
+    "title": "Abstract Waves",
+    "subtitle": "Mixed Media • 2022"
+  },
+  {
+    "src": "https://picsum.photos/id/1043/1200/800",
+    "title": "Neon City",
+    "subtitle": "Illustration • 2021"
+  },
+  {
+    "src": "https://picsum.photos/id/1052/1200/800",
+    "title": "Quiet Harbor",
+    "subtitle": "Oil on Canvas • 2020"
+  },
+  {
+    "src": "https://picsum.photos/id/1067/1200/800",
+    "title": "Chromatic Bloom",
+    "subtitle": "Photography • 2019"
+  }
+];
+
+// Inline SVG placeholder generator
+function svgPlaceholder(width = 1200, height = 800, text = 'Image not found') {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${width}' height='${height}' viewBox='0 0 ${width} ${height}'>
+    <rect width='100%' height='100%' fill='#0b0710'/>
+    <g fill='#b9c2d9' font-family='Inter, Arial, sans-serif' font-size='20' text-anchor='middle'>
+      <text x='50%' y='48%'>${text}</text>
+      <text x='50%' y='60%' font-size='14'>Check file path or network</text>
+    </g>
+  </svg>`;
+  return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+}
+
+// handle broken images
+window.handleImageError = function(imgEl){
+  try {
+    imgEl.onerror = null;
+    imgEl.dataset.failedSrc = imgEl.src || '';
+    imgEl.src = svgPlaceholder(1200, 800, 'Image not found');
+    imgEl.classList.add('broken');
+    imgEl.style.objectFit = 'cover';
+    imgEl.alt = imgEl.alt ? imgEl.alt + ' (missing)' : 'Missing image';
+  } catch(e) {
+    console.error('handleImageError error', e);
+  }
+};
+
+// build card
+function buildCard(item, index) {
+  const article = document.createElement('article');
+  article.className = 'card';
+  article.dataset.index = index;
+
+  const inner = document.createElement('div');
+  inner.className = 'card-inner';
+
+  const artWrap = document.createElement('div');
+  artWrap.className = 'art-wrap';
+
+  const img = document.createElement('img');
+  img.className = 'art-img';
+  img.loading = 'lazy';
+  img.alt = item.title || ('Artwork ' + (index + 1));
+  img.src = item.src || '';
+  img.onerror = function(){ handleImageError(img); };
+
+  artWrap.appendChild(img);
+
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  const metaInner = document.createElement('div');
+  const title = document.createElement('div');
+  title.className = 'title';
+  title.textContent = item.title || ('Untitled ' + (index + 1));
+  const subtitle = document.createElement('div');
+  subtitle.className = 'subtitle';
+  subtitle.textContent = item.subtitle || '';
+  metaInner.appendChild(title);
+  metaInner.appendChild(subtitle);
+  meta.appendChild(metaInner);
+
+  const neon = document.createElement('div');
+  neon.className = 'neon';
+
+  inner.appendChild(artWrap);
+  inner.appendChild(meta);
+  inner.appendChild(neon);
+  article.appendChild(inner);
+
+  // hover parallax inside card
+  article.addEventListener('mousemove', (e) => {
+    const r = article.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    img.style.transform = `scale(1.06) translate(${(px-0.5)*8}px, ${(py-0.5)*8}px)`;
+  });
+  article.addEventListener('mouseleave', () => {
+    img.style.transform = '';
+  });
+
+  // click to open full-screen preview
+  article.addEventListener('click', () => {
+    openPreview(img.src);
+  });
+
+  return article;
+}
+
+// render manifest
+function renderManifest(man) {
+  const gallery = document.getElementById('gallery');
+  const status = document.getElementById('status');
+  gallery.innerHTML = '';
+  if(!Array.isArray(man) || man.length === 0) {
+    status.textContent = 'Manifest empty.';
+    return;
+  }
+  status.textContent = `Loaded ${man.length} item(s).`;
+  man.forEach((item, i) => {
+    const card = buildCard(item, i);
+    gallery.appendChild(card);
+  });
+}
+
+// shuffle images
+document.getElementById('shuffle').addEventListener('click', () => {
+  const imgs = Array.from(document.querySelectorAll('.art-img'));
+  const srcs = imgs.map(i => i.dataset.originalSrc || i.src);
+  for (let i = srcs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [srcs[i], srcs[j]] = [srcs[j], srcs[i]];
+  }
+  imgs.forEach((img, idx) => {
+    if(!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+    img.style.transition = 'transform .6s ease, opacity .4s ease';
+    img.style.opacity = 0;
+    setTimeout(() => {
+      img.src = srcs[idx];
+      img.classList.remove('broken');
+      img.style.opacity = 1;
+    }, 300);
+  });
+});
+
+// diagnostic scan
+function scanImages() {
+  const imgs = Array.from(document.querySelectorAll('.art-img'));
+  const broken = imgs.filter(i => i.complete && (i.naturalWidth === 0 || i.classList.contains('broken')));
+  return { total: imgs.length, broken };
+}
+function showDiag(count) {
+  const diagBox = document.getElementById('diagBox');
+  const diagCount = document.getElementById('diagCount');
+  diagCount.textContent = count;
+  diagBox.classList.add('show');
+  setTimeout(() => diagBox.classList.remove('show'), 6000);
+}
+document.getElementById('runDiag').addEventListener('click', () => {
+  const result = scanImages();
+  result.broken.forEach(img => {
+    if(!img.classList.contains('broken')) handleImageError(img);
+  });
+  showDiag(result.broken.length);
+  console.info('Image diagnostic:', result.total, 'images scanned,', result.broken.length, 'broken.');
+  if(result.broken.length) {
+    console.warn('Broken image URLs:');
+    result.broken.forEach(b => console.warn(b.dataset.failedSrc || b.src || b.getAttribute('src')));
+  }
+});
+
+// parallax tilt
+(function(){
+  let tiltEnabled = false;
+  function onMove(e){
+    const x = (e.clientX || (e.touches && e.touches[0].clientX)) - window.innerWidth/2;
+    const y = (e.clientY || (e.touches && e.touches[0].clientY)) - window.innerHeight/2;
+    const rx = (y / window.innerHeight) * 10;
+    const ry = (x / window.innerWidth) * -10;
+    document.querySelector('.wrap').style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    document.querySelectorAll('.card').forEach((card) => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top + rect.height/2;
+      const dx = ((e.clientX || (e.touches && e.touches[0].clientX)) - cx) / rect.width;
+      const dy = ((e.clientY || (e.touches && e.touches[0].clientY)) - cy) / rect.height;
+      const tiltX = dy * 10;
+      const tiltY = dx * -10;
+      card.style.transform = `translateY(-18px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    });
+  }
+  function reset(){
+    document.querySelector('.wrap').style.transform = '';
+    document.querySelectorAll('.card').forEach(c => c.style.transform = '');
+  }
+  document.getElementById('toggleTilt').addEventListener('click', () => {
+    tiltEnabled = !tiltEnabled;
+    document.body.classList.toggle('tilt-enabled', tiltEnabled);
+    if(tiltEnabled){
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, {passive:true});
+    } else {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('touchmove', onMove);
+      reset();
+    }
+  });
+})();
+
+// fullscreen preview
+function openPreview(src){
+  const overlay = document.createElement('div');
+  overlay.style.position='fixed';
+  overlay.style.inset=0;
+  overlay.style.background='rgba(2,6,23,0.9)';
+  overlay.style.display='flex';
+  overlay.style.alignItems='center';
+  overlay.style.justifyContent='center';
+  overlay.style.zIndex=9999;
+  overlay.style.cursor='zoom-out';
+  overlay.innerHTML = '<img src="'+src+'" style="max-width:92%; max-height:92%; border-radius:12px; box-shadow: 0 30px 80px rgba(0,0,0,0.8);">';
+  overlay.addEventListener('click', () => document.body.removeChild(overlay));
+  document.body.appendChild(overlay);
+}
+window.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    const overlay = document.querySelector('body > div[style*="z-index: 9999"]');
+    if(overlay) document.body.removeChild(overlay);
+  }
+});
+
+// initial render and safety checks
+window.addEventListener('load', () => {
+  renderManifest(manifest);
+  // safety: mark broken images after a timeout
+  setTimeout(() => {
+    document.querySelectorAll('.art-img').forEach(img => {
+      if(img.complete && img.naturalWidth === 0) handleImageError(img);
+    });
+  }, 5000);
+});
+</script>
 </body>
 </html>
